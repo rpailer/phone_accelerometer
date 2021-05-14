@@ -1,36 +1,33 @@
-import React, { useState } from "react";
-import useLongPress from "./useLongPress";
+import React from "react";
+import { AppBar, Grid, IconButton, Toolbar, Typography } from "@material-ui/core";
+import MenuIcon from '@material-ui/icons/Menu';
+import ContentPane from "./components/ContentPane";
 
 function App() {
-  const [longPressCount, setlongPressCount] = useState(0)
-  const [clickCount, setClickCount] = useState(0)
 
-  const onLongPress = () => {
-    console.log('longpress is triggered');
-    setlongPressCount(longPressCount + 1);
-  };
+  
 
-  const onRelease = () => {
-    console.log('longpress is released');
-    
-  };
-
-  const onClick = () => {
-    console.log('click is triggered')
-    setClickCount(clickCount + 1);
-  }
-
-  const defaultOptions = {
-    shouldPreventDefault: true,
-    delay: 500,
-  };
-  const longPressEvent = useLongPress(onLongPress, onRelease, onClick, defaultOptions);
 
   return (
     <div className="App">
-      <button {...longPressEvent}>use  Loooong  Press</button>
-      <span>Long press count: {longPressCount}</span>
-      <span>Click count: {clickCount}</span>
+      <Grid container direction="column" alignItems="stretch" spacing={1}>
+        <Grid item>
+          <AppBar position="static">
+            <Toolbar>
+              <IconButton edge="start" color="inherit" aria-label="menu">
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6">
+                Device Sensor Data
+              </Typography>
+            </Toolbar>
+            </AppBar>
+        </Grid>
+        <Grid item>
+          <ContentPane/>
+        </Grid>
+      </Grid>
+
     </div>
 
   );

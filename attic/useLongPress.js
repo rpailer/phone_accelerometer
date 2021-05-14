@@ -1,5 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 
+//see https://stackoverflow.com/questions/48048957/react-long-press-event
+
 const useLongPress = (
   onLongPress,
   onRelease,

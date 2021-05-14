@@ -3,6 +3,10 @@
 The application was created by  
 `npx create-react-app phone_accelerometer`
 
+Material UI  
+`npm install @material-ui/core`
+`npm install @material-ui/icons`
+
 
 
 # Getting Started with Create React App
