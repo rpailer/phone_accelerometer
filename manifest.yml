@@ -1,0 +1,5 @@
+applications:
+- name: ygbety-iot
+  buildpacks:
+  - staticfile_buildpack
+  memory: 30M
