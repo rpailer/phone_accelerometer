@@ -37,7 +37,8 @@ export default function ContentPane () {
                         x: event.acceleration.x,
                         y: event.acceleration.y,
                         z: event.acceleration.z
-                    }
+                    },
+                    ts: new Date().toISOString()
                 }
             };
             console.log("sending acceleration data");
@@ -56,7 +57,8 @@ export default function ContentPane () {
                         alpha: event.alpha,
                         beta: event.beta,
                         gamma: event.gamma
-                    }
+                    },
+                    ts: new Date().toISOString()
                 }
             };
             console.log("sending orientation data");
