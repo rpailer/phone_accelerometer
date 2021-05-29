@@ -1,11 +1,26 @@
 import React from "react";
-import { AppBar, Grid, IconButton, Toolbar, Typography } from "@material-ui/core";
+import { AppBar, Grid, IconButton, Menu, MenuItem, Toolbar, Typography } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
-import ContentPane from "./components/ContentPane";
+import Train from "./components/Train";
+import Score from "./components/Score";
 
 function App() {
 
-  
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [func, setFunc] = React.useState("train");
+
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = (event) => {
+    console.log("Handle menu " + event.target.id);
+    setFunc(event.target.id);
+
+    setAnchorEl(null);
+
+  };
+
 
 
   return (
@@ -14,17 +29,34 @@ function App() {
         <Grid item>
           <AppBar position="static">
             <Toolbar>
-              <IconButton edge="start" color="inherit" aria-label="menu">
+              <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleMenuClick}>
                 <MenuIcon />
               </IconButton>
-              <Typography variant="h6">
+                <Menu
+                  id="simple-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem id="train" onClick={handleClose}>Train</MenuItem>
+                  <MenuItem id="score" onClick={handleClose}>Score</MenuItem>
+                  
+                  
+                </Menu> 
+                <Typography variant="h6">
                 Device Sensor Data
               </Typography>
             </Toolbar>
             </AppBar>
         </Grid>
         <Grid item>
-          <ContentPane/>
+          {func === 'train' ? (
+            <Train/>
+          ) : (
+            <Score/>
+          )}
+          
         </Grid>
       </Grid>
 

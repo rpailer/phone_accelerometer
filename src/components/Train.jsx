@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
       },
   }));
 
-export default function ContentPane () {
+export default function Train () {
     const classes = useStyles();
     const [recording, setRecording] = React.useState(false);
     const [orgId, setOrgId] = React.useState("ygbety");
@@ -173,9 +173,9 @@ export default function ContentPane () {
                 type="password"
                 onChange={(e) => { setToken(e.target.value); }}
             />
-            <Divider/>
+            <Box p={2}><Divider/></Box>
             <Grid item justify="center">
-            <Box mt={3}>
+            <Box mb={3}>
                 <InputLabel>Select figure</InputLabel>
                 <OutlinedInput 
                         id="key_input"
