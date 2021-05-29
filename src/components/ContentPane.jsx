@@ -1,9 +1,10 @@
-import { Box, Button, Divider, TextField, Typography } from "@material-ui/core";
+import { Box, Button, Divider, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import PauseCircleOutlineIcon from '@material-ui/icons/PauseCircleOutline';
 import axios from "axios";
+import DialpadIcon from '@material-ui/icons/Dialpad';
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -19,17 +20,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ContentPane () {
     const classes = useStyles();
-    console.log("Content Pane");
     const [recording, setRecording] = React.useState(false);
     const [orgId, setOrgId] = React.useState("ygbety");
     const [devType, setDevType] = React.useState("Raspy");
     const [devId, setDevId] = React.useState("raspi-sim");
     const [eventType, setEventType] = React.useState("motion");
     const [token, setToken] = React.useState("");
+    const [key, setKey] = React.useState("");
+    const [motionset, setMotionset] = React.useState("");
 
     const handleAcceleration = (event) => {
         console.log("Handle acceleration")
 //        console.log(event);
+        let now = new Date();
         if(recording) {
             var data = {
                 d: {
@@ -38,7 +41,11 @@ export default function ContentPane () {
                         y: event.acceleration.y,
                         z: event.acceleration.z
                     },
-                    ts: new Date().toISOString()
+                    date: now.toISOString(),
+                    timestamp: now.getTime(),
+                    device: devId,
+                    motionset: motionset,
+                    figure: key,
                 }
             };
             console.log("sending acceleration data");
@@ -50,6 +57,7 @@ export default function ContentPane () {
         console.log("handle orientation");
         //console.log(event);
         //console.log(recording);
+        let now = new Date();
         if(recording) {
             var data = {
                 d: {
@@ -58,7 +66,11 @@ export default function ContentPane () {
                         beta: event.beta,
                         gamma: event.gamma
                     },
-                    ts: new Date().toISOString()
+                    date: now.toISOString(),
+                    timestamp: now.getTime(),
+                    device: devId,
+                    motionset: motionset,
+                    figure: key,
                 }
             };
             console.log("sending orientation data");
@@ -97,6 +109,8 @@ export default function ContentPane () {
 
     const handleStart = () => {
         console.log("Start");
+        let now = new Date();
+        setMotionset(now.toISOString());
         setRecording(true);
         console.log("recording:" + recording)
     };
@@ -107,11 +121,17 @@ export default function ContentPane () {
         console.log("recording:" + recording)
     };
 
+    const handleNumber = (k) => {
+        console.log(k);
+        setKey(k);
+    };
+    
+
 
 
     return (
         <div>
-            <Box m={2}>
+            <Grid m={2} justify="center" alignItems="center">
             <TextField
                 required
                 id="org-id"
@@ -153,9 +173,69 @@ export default function ContentPane () {
                 type="password"
                 onChange={(e) => { setToken(e.target.value); }}
             />
-            </Box>
             <Divider/>
-            <Box m={2}>
+            <Grid item justify="center">
+            <Box mt={3}>
+                <InputLabel>Select figure</InputLabel>
+                <OutlinedInput 
+                        id="key_input"
+                        label="selected figure"
+                        readOnly
+                        value={key}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                    edge="end"
+                                >
+                                    <DialpadIcon/>
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                    >
+
+                </OutlinedInput>
+                <div>
+                {[7, 8, 9].map(k => (
+                <Button
+                    variant="outlined"
+                    key={`button-${k}`}
+                    onClick={e => handleNumber(k)}
+                    value={k}
+                    >{k}</Button>
+                ))}
+                </div>
+                <div>
+                {[4, 5, 6].map(k => (
+                <Button
+                    variant="outlined"
+                    key={`button-${k}`}
+                    onClick={e => handleNumber(k)}
+                    value={k}
+                    >{k}</Button>
+                ))}
+                </div>
+                <div>
+                {[1, 2, 3].map(k => (
+                <Button
+                    variant="outlined"
+                    key={`button-${k}`}
+                    onClick={e => handleNumber(k)}
+                    value={k}
+                    >{k}</Button>
+                ))}
+                </div>
+                <div>
+                {[0].map(k => (
+                <Button
+                    variant="outlined"
+                    key={`button-${k}`}
+                    onClick={e => handleNumber(k)}
+                    value={k}
+                    >{k}</Button>
+                ))}
+                </div>
+            </Box>
+            </Grid>
             <Typography>Sensor Data Transfer</Typography>
             {recording ? (
                 <div>
@@ -183,7 +263,7 @@ export default function ContentPane () {
                 </Button>
                 </div>
             )}
-            </Box>
+            </Grid>
         </div>
     );
 }
