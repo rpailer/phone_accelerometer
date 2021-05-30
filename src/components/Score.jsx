@@ -20,6 +20,8 @@ const useStyles = makeStyles((theme) => ({
 export default function Score () {
     const classes = useStyles();
 
+    const sendOrientation = process.env.REACT_APP_ORIENTATION === 'true' ? true : false;
+
     const [recording, setRecording] = React.useState(false);
     const [motionset, setMotionset] = React.useState("");
     const [nodeRedUrl, setNodeRedUrl] = React.useState("ttps://node-red-fhbgld-2021-05-14.eu-de.mybluemix.net/score_motion");
@@ -108,11 +110,15 @@ export default function Score () {
 
     useEffect(() => {
         console.log("Use effect");  
-        window.addEventListener('devicemotion', handleAcceleration)
-        window.addEventListener('deviceorientation', handleOrientation)
+        window.addEventListener('devicemotion', handleAcceleration);
+        if (sendOrientation) {
+            window.addEventListener('deviceorientation', handleOrientation);
+        }
             return () => {
-                window.removeEventListener('devicemotion', handleAcceleration)
-                window.removeEventListener('deviceorientation', handleOrientation)
+                window.removeEventListener('devicemotion', handleAcceleration);
+                if (sendOrientation) {
+                    window.removeEventListener('deviceorientation', handleOrientation);
+                }
                     };
         // eslint-disable-next-line
           }, [recording, dataObj]);

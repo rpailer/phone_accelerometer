@@ -29,6 +29,8 @@ export default function Train () {
     const [key, setKey] = React.useState("");
     const [motionset, setMotionset] = React.useState("");
 
+    const sendOrientation = process.env.REACT_APP_ORIENTATION === 'true' ? true : false;
+
     const handleAcceleration = (event) => {
         console.log("Handle acceleration")
 //        console.log(event);
@@ -98,11 +100,15 @@ export default function Train () {
 
     useEffect(() => {
         console.log("Use effect");  
-        window.addEventListener('devicemotion', handleAcceleration)
-        window.addEventListener('deviceorientation', handleOrientation)
+        window.addEventListener('devicemotion', handleAcceleration);
+        if (sendOrientation) {
+            window.addEventListener('deviceorientation', handleOrientation);
+        }
             return () => {
-                window.removeEventListener('devicemotion', handleAcceleration)
-                window.removeEventListener('deviceorientation', handleOrientation)
+                window.removeEventListener('devicemotion', handleAcceleration);
+                if (sendOrientation) {
+                    window.removeEventListener('deviceorientation', handleOrientation);
+                }
                     };
         // eslint-disable-next-line
           }, [recording]);
