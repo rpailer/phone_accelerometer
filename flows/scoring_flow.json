@@ -1,0 +1,198 @@
+[
+    {
+        "id": "fa3fdd8f.e55528",
+        "type": "tab",
+        "label": "Scoring",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "444b07a3.bd97b",
+        "type": "http in",
+        "z": "fa3fdd8f.e55528",
+        "name": "",
+        "url": "/score_motion",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 590,
+        "y": 420,
+        "wires": [
+            [
+                "83a93d2e.6d625",
+                "b415f89f.507738"
+            ]
+        ]
+    },
+    {
+        "id": "26db8bf6.47e8cc",
+        "type": "debug",
+        "z": "fa3fdd8f.e55528",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1250,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "31157b1b.5906a4",
+        "type": "http response",
+        "z": "fa3fdd8f.e55528",
+        "name": "Score",
+        "statusCode": "",
+        "headers": {},
+        "x": 1290,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "a7070c0.f555078",
+        "type": "inject",
+        "z": "fa3fdd8f.e55528",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "apikey=XXX&grant_type=urn:ibm:params:oauth:grant-type:apikey",
+        "payloadType": "str",
+        "x": 580,
+        "y": 600,
+        "wires": [
+            [
+                "49033aad.d51cf4"
+            ]
+        ]
+    },
+    {
+        "id": "49033aad.d51cf4",
+        "type": "http request",
+        "z": "fa3fdd8f.e55528",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "https://iam.bluemix.net/oidc/token",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "basic",
+        "x": 770,
+        "y": 600,
+        "wires": [
+            [
+                "dfd80b39.360c8",
+                "ff109ffa.011608"
+            ]
+        ]
+    },
+    {
+        "id": "dfd80b39.360c8",
+        "type": "debug",
+        "z": "fa3fdd8f.e55528",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.access_token",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "ff109ffa.011608",
+        "type": "function",
+        "z": "fa3fdd8f.e55528",
+        "name": "",
+        "func": "var iamToken = msg.payload.access_token;\nnode.warn(iamToken.length);\ncontext.global.set('iamToken', iamToken);\nnode.warn(context.global.get('iamToken').length);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1100,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8385faa3.179308",
+        "type": "http request",
+        "z": "fa3fdd8f.e55528",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://eu-de.ml.cloud.ibm.com/ml/v4/deployments/63c53276-9a46-4fb8-807f-b810227b9527/predictions?version=2020-08-01",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1070,
+        "y": 480,
+        "wires": [
+            [
+                "26db8bf6.47e8cc",
+                "31157b1b.5906a4"
+            ]
+        ]
+    },
+    {
+        "id": "83a93d2e.6d625",
+        "type": "function",
+        "z": "fa3fdd8f.e55528",
+        "name": "",
+        "func": "msg.headers = {};\nmsg.headers['Authorization'] =  'Bearer ' + context.global.get('iamToken');\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 900,
+        "y": 380,
+        "wires": [
+            [
+                "8385faa3.179308"
+            ]
+        ]
+    },
+    {
+        "id": "b415f89f.507738",
+        "type": "debug",
+        "z": "fa3fdd8f.e55528",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 480,
+        "wires": []
+    }
+]

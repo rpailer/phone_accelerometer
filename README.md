@@ -8,6 +8,40 @@ Material UI
 `npm install @material-ui/icons`
 `npm install axios`
 
+# Node Red Scoring Flow
+In order to send data from a browser to a Node Red http input node, Node Red has to be configured to reply to CORS requests from the browser:
+
+1. Go to Node Red Toolchain (IBM Cloud -> Resource List -> Developer Tools -> NODERED....)
+2. Open GIT Repo for Node Red
+3. Edit bluemix-settings.js
+4. after `functionGlobalContext: { }, ` add  
+  ```
+    // The following property can be used to configure cross-origin resource sharing
+    // in the HTTP nodes.
+    // See https://github.com/troygoode/node-cors#configuration-options for
+    // details on its contents. The following is a basic permissive set of options:
+    httpNodeCors: {
+      origin: "*",
+     methods: "GET,PUT,POST,DELETE"
+    },
+  ```
+
+# IBM Cloud Toolchain Deployment
+1) Create a new empty toolchain
+2) Add the GitHub tool, configure with github credentials and project URL
+3) Add a Delivery Pipeline tool
+    - add a build stage, builder type npm  
+    add at the end of the build script add:  
+    `npm install`  
+    `npm run build`  
+    - add a deploy stage, deployer type Cloud Foundry  
+    **NOTE:** change the `-name: XXX-iot` in the `manifest.yml` file to your IOT organization name -> this will be the first part of the application URL!!!
+    add at the end of the deploy script:  
+    `cp -v Staticfile build &&`  
+    `cp -v manifest.yml build &&`  
+    `cd build &&`  
+    `cf push -f manifest.yml`  
+
 
 
 # Getting Started with Create React App
