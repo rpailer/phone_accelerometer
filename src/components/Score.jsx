@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Box, Button, Divider, Grid, TextField, Typography } from "@material-ui/core";
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import PauseCircleOutlineIcon from '@material-ui/icons/PauseCircleOutline';
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -21,11 +22,8 @@ export default function Score () {
 
     const [recording, setRecording] = React.useState(false);
     const [motionset, setMotionset] = React.useState("");
-    const [deploymentId, setDeploymentId] = React.useState("");
-    const [apikey, setApiKey] = React.useState("");
+    const [nodeRedUrl, setNodeRedUrl] = React.useState("ttps://node-red-fhbgld-2021-05-14.eu-de.mybluemix.net/score_motion");
     const [dataObj, setDataObj] = React.useState({dataArray: []});
-
-
 
     const handleAcceleration = (event) => {
         console.log("Handle acceleration")
@@ -63,11 +61,7 @@ export default function Score () {
                     motionset: motionset,
                 }
             };
-            console.log("adding orientation data");
-            console.log("array:" + dataObj.dataArray)
             setDataObj({ dataArray: [...dataObj.dataArray, data]});
-            console.log()
-            console.log(dataObj);
         }
     }
 
@@ -76,15 +70,34 @@ export default function Score () {
         let now = new Date();
         setMotionset(now.toISOString());
         setRecording(true);
-        console.log("recording:" + recording)
+        console.log("recording started")
     };
 
     const handleStop = () => {
         console.log("Stop");
         setRecording(false);
-        console.log("recording:" + recording)
+        console.log("recording stopped")
         console.log(dataObj);
+        scoreData(dataObj);
     };
+
+    const scoreData = (data) => {
+
+        var url = "https://node-red-fhbgld-2021-05-14.eu-de.mybluemix.net/score_motion";
+
+        console.log("sending to: " + url);
+        console.log(data);
+        axios.request({
+            method: "POST",
+            url: url,
+            data: data,
+            headers: { "Content-Type": "application/json",
+                        "Accept": "application/json" },
+
+        }).then(resp => {
+            console.log(resp.data);
+        });
+    }
 
     useEffect(() => {
         console.log("Use effect");  
@@ -102,20 +115,13 @@ export default function Score () {
             <Grid m={2} justify="center" alignItems="center">
             <TextField
                 required
-                id="depl-id"
-                label="Deployment Id"
-                value={deploymentId}
+                id="nrUrl"
+                label="Node Red URL"
+                value={nodeRedUrl}
                 className={classes.textField}
-                onChange={(e) => { setDeploymentId(e.target.value); }}
+                onChange={(e) => { setNodeRedUrl(e.target.value); }}
             />
-            <TextField
-                required
-                id="api-key"
-                label="API Key"
-                value={apikey}
-                className={classes.textField}
-                onChange={(e) => { setApiKey(e.target.value); }}
-            />
+
             <Box p={2}><Divider/></Box>
             <Grid item justify="center">
             </Grid>
