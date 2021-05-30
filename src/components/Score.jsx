@@ -33,14 +33,16 @@ export default function Score () {
         let now = new Date();
         if(recording) {
             var data = {
+                device: "phone_1",
+                figure: "1",
+                motionset: motionset,
+                date: now.toISOString(),
+                timestamp: now.getTime(),
                 acceleration: {
                     x: event.acceleration.x,
                     y: event.acceleration.y,
                     z: event.acceleration.z
                 },
-                date: now.toISOString(),
-                timestamp: now.getTime(),
-                motionset: motionset,
             };
             setDataObj({ dataArray: [...dataObj.dataArray, data]});
         }
