@@ -24,22 +24,21 @@ export default function Score () {
     const [motionset, setMotionset] = React.useState("");
     const [nodeRedUrl, setNodeRedUrl] = React.useState("ttps://node-red-fhbgld-2021-05-14.eu-de.mybluemix.net/score_motion");
     const [dataObj, setDataObj] = React.useState({dataArray: []});
+    const [pred, setPred] = React.useState(null);
 
     const handleAcceleration = (event) => {
         console.log("Handle acceleration")
         let now = new Date();
         if(recording) {
             var data = {
-                d: {
-                    acceleration: {
-                        x: event.acceleration.x,
-                        y: event.acceleration.y,
-                        z: event.acceleration.z
-                    },
-                    date: now.toISOString(),
-                    timestamp: now.getTime(),
-                    motionset: motionset,
-                }
+                acceleration: {
+                    x: event.acceleration.x,
+                    y: event.acceleration.y,
+                    z: event.acceleration.z
+                },
+                date: now.toISOString(),
+                timestamp: now.getTime(),
+                motionset: motionset,
             };
             setDataObj({ dataArray: [...dataObj.dataArray, data]});
         }
@@ -50,16 +49,14 @@ export default function Score () {
         let now = new Date();
         if(recording) {
             var data = {
-                d: {
-                    orientation: {
-                        alpha: event.alpha,
-                        beta: event.beta,
-                        gamma: event.gamma
-                    },
-                    date: now.toISOString(),
-                    timestamp: now.getTime(),
-                    motionset: motionset,
-                }
+                orientation: {
+                    alpha: event.alpha,
+                    beta: event.beta,
+                    gamma: event.gamma
+                },
+                date: now.toISOString(),
+                timestamp: now.getTime(),
+                motionset: motionset,
             };
             setDataObj({ dataArray: [...dataObj.dataArray, data]});
         }
@@ -70,6 +67,7 @@ export default function Score () {
         let now = new Date();
         setMotionset(now.toISOString());
         setRecording(true);
+        setPred(null);
         console.log("recording started")
     };
 
@@ -86,16 +84,25 @@ export default function Score () {
         var url = "https://node-red-fhbgld-2021-05-14.eu-de.mybluemix.net/score_motion";
 
         console.log("sending to: " + url);
-        console.log(data);
+        var input = {
+            "input_data": [
+                {
+                    "values": [...data.dataArray],
+                }
+            ],
+        };
+        console.log(input);
         axios.request({
             method: "POST",
             url: url,
-            data: data,
+            data: input,
             headers: { "Content-Type": "application/json",
                         "Accept": "application/json" },
 
         }).then(resp => {
-            console.log(resp.data);
+            console.log("response:");
+            console.log(resp.data.predictions[0].values[0]);
+            setPred(resp.data.predictions[0].values[0]);
         });
     }
 
@@ -153,6 +160,7 @@ export default function Score () {
                 </div>
             )}
             </Grid>
+            {pred ? (<Typography>Prediction: {pred}</Typography>) : (<div/>)}
         </div>
     );
 }
