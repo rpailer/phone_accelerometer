@@ -77,7 +77,12 @@ export default function Score () {
                     gamma: event.gamma
                 },
             };
-            setDataObj({ dataArray: [...dataObj.dataArray, data]});
+            (async()=>{
+                //Do some stuff
+                setDataObj({ dataArray: [...dataObj.dataArray, data]});
+                await sleep(100);
+                //Do some more stuff
+              })()
         }
     }
 
