@@ -5,6 +5,12 @@ import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import PauseCircleOutlineIcon from '@material-ui/icons/PauseCircleOutline';
 import axios from "axios";
 
+const DEF_DELAY = 1000;
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY));
+}
+
 const useStyles = makeStyles((theme) => ({
     button: {
       margin: theme.spacing(1),
@@ -24,9 +30,10 @@ export default function Score () {
 
     const [recording, setRecording] = React.useState(false);
     const [motionset, setMotionset] = React.useState("");
-    const [nodeRedUrl, setNodeRedUrl] = React.useState("ttps://node-red-fhbgld-2021-05-14.eu-de.mybluemix.net/score_motion");
+    const [nodeRedUrl, setNodeRedUrl] = React.useState("https://node-red-fhbgld-2021-05-14.eu-de.mybluemix.net/score_motion");
     const [dataObj, setDataObj] = React.useState({dataArray: []});
     const [pred, setPred] = React.useState(null);
+
 
     const handleAcceleration = (event) => {
         console.log("Handle acceleration")
@@ -44,7 +51,13 @@ export default function Score () {
                     z: event.acceleration.z
                 },
             };
-            setDataObj({ dataArray: [...dataObj.dataArray, data]});
+            (async()=>{
+                //Do some stuff
+                setDataObj({ dataArray: [...dataObj.dataArray, data]});
+                await sleep(100);
+                //Do some more stuff
+              })()
+            
         }
     }
 
@@ -81,13 +94,19 @@ export default function Score () {
         console.log("Stop");
         setRecording(false);
         console.log("recording stopped")
+    };
+
+    const handleSend = () => {
+        console.log("Send");
+        scoreData(dataObj);
+        console.log("sending:")
         console.log(dataObj);
         scoreData(dataObj);
     };
 
     const scoreData = (data) => {
 
-        var url = "https://node-red-fhbgld-2021-05-14.eu-de.mybluemix.net/score_motion";
+        var url = nodeRedUrl;
 
         console.log("sending to: " + url);
         var input = {
@@ -177,6 +196,17 @@ export default function Score () {
                 </Button>
                 </div>
             )}
+            <div>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    startIcon={<PlayCircleOutlineIcon/>}
+                    onClick={handleSend}
+                >
+                    Send
+                </Button>
+                </div>
             </Grid>
             {pred ? (<Typography>Prediction: {pred}</Typography>) : (<div/>)}
         </div>
