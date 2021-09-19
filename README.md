@@ -1,4 +1,4 @@
-# Read and transfer device accelerometer data
+# Read and transfer device accelerometer data - Version 2
 
 The application was created by  
 `npx create-react-app phone_accelerometer`
