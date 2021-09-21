@@ -5,8 +5,15 @@ The application was created by
 
 Material UI  
 `npm install @material-ui/core`
-`npm install @material-ui/icons`
+`npm install @material-ui/icons` 
+
+Axios - HTTP request for React 
 `npm install axios`
+
+Redux state management  
+`npm install react-redux`  
+`npm install redux-saga` 
+see also: https://github.com/erikras/ducks-modular-redux
 
 # Node Red Scoring Flow
 In order to send data from a browser to a Node Red http input node, Node Red has to be configured to reply to CORS requests from the browser:
