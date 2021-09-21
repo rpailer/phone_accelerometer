@@ -1,5 +1,5 @@
-import { call, put, select, delay } from "redux-saga/effects";
-import { addDataObj, setPred } from "../../ducks/ScoreReducer";
+import { call, put, select } from "redux-saga/effects";
+import { setPred } from "../../ducks/ScoreReducer";
 import { scoreRequest } from "../../requests/ScoreRequest";
 
 
@@ -19,16 +19,3 @@ export function* handleScoreRequest(action) {
   }
 }
 
-export function* handleDeviceMotionEvent(action) {
-  try {
-    console.log("ScoreHandler.handleDeviceMotionEvent:");
-    console.log(action);
-
-    const state = yield select();
-    yield delay(state.score.delay);
-    //console.log(state);
-    yield put(addDataObj(action.obj));
-  } catch (error) {
-    console.log(error);
-  }
-}
