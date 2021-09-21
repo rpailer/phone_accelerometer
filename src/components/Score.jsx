@@ -152,7 +152,7 @@ export default function Score () {
 
     return (
         <div>
-            <Grid m={2} justify="center" alignItems="center">
+            <Grid m={2} justifyContent="center" alignItems="center">
             <TextField
                 required
                 id="nrUrl"
@@ -172,7 +172,7 @@ export default function Score () {
             />
 
             <Box p={2}><Divider/></Box>
-            <Grid item justify="center">
+            <Grid item justifyContent="center">
             </Grid>
             <Typography>Sensor Data Transfer</Typography>
             {recording ? (

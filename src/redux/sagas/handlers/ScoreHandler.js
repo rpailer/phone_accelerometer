@@ -19,9 +19,9 @@ export function* handleScoreRequest(action) {
   }
 }
 
-export function* handleOrientationEvent(action) {
+export function* handleDeviceMotionEvent(action) {
   try {
-    console.log("ScoreHandler.handleOrientationEvent:");
+    console.log("ScoreHandler.handleDeviceMotionEvent:");
     console.log(action);
 
     const state = yield select();

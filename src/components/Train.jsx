@@ -188,7 +188,7 @@ export default function Train () {
                 onChange={(e) => { setToken(e.target.value); }}
             />
             <Box p={2}><Divider/></Box>
-            <Grid item justify="center">
+            <Grid item justifyContent="center">
             <Box mb={3}>
                 <InputLabel>Select figure</InputLabel>
                 <OutlinedInput 
