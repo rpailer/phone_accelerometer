@@ -1,6 +1,6 @@
 import { call, put, select } from "redux-saga/effects";
 import { setPred } from "../../ducks/ScoreReducer";
-import { scoreRequest } from "../../requests/ScoreRequest";
+import { scoreRequest } from "../requests/ScoreRequest";
 
 
 export function* handleScoreRequest(action) {
