@@ -1,198 +1,242 @@
 [
-    {
-        "id": "fa3fdd8f.e55528",
-        "type": "tab",
-        "label": "Scoring",
-        "disabled": false,
-        "info": ""
-    },
-    {
-        "id": "444b07a3.bd97b",
-        "type": "http in",
-        "z": "fa3fdd8f.e55528",
-        "name": "",
-        "url": "/score_motion",
-        "method": "post",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 590,
-        "y": 420,
-        "wires": [
-            [
-                "83a93d2e.6d625",
-                "b415f89f.507738"
-            ]
-        ]
-    },
-    {
-        "id": "26db8bf6.47e8cc",
-        "type": "debug",
-        "z": "fa3fdd8f.e55528",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1250,
-        "y": 340,
-        "wires": []
-    },
-    {
-        "id": "31157b1b.5906a4",
-        "type": "http response",
-        "z": "fa3fdd8f.e55528",
-        "name": "Score",
-        "statusCode": "",
-        "headers": {},
-        "x": 1290,
-        "y": 520,
-        "wires": []
-    },
-    {
-        "id": "a7070c0.f555078",
-        "type": "inject",
-        "z": "fa3fdd8f.e55528",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "apikey=XXX&grant_type=urn:ibm:params:oauth:grant-type:apikey",
-        "payloadType": "str",
-        "x": 580,
-        "y": 600,
-        "wires": [
-            [
-                "49033aad.d51cf4"
-            ]
-        ]
-    },
-    {
-        "id": "49033aad.d51cf4",
-        "type": "http request",
-        "z": "fa3fdd8f.e55528",
-        "name": "",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": "body",
-        "url": "https://iam.bluemix.net/oidc/token",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "basic",
-        "x": 770,
-        "y": 600,
-        "wires": [
-            [
-                "dfd80b39.360c8",
-                "ff109ffa.011608"
-            ]
-        ]
-    },
-    {
-        "id": "dfd80b39.360c8",
-        "type": "debug",
-        "z": "fa3fdd8f.e55528",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload.access_token",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1040,
-        "y": 580,
-        "wires": []
-    },
-    {
-        "id": "ff109ffa.011608",
-        "type": "function",
-        "z": "fa3fdd8f.e55528",
-        "name": "",
-        "func": "var iamToken = msg.payload.access_token;\nnode.warn(iamToken.length);\ncontext.global.set('iamToken', iamToken);\nnode.warn(context.global.get('iamToken').length);\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1100,
-        "y": 640,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "8385faa3.179308",
-        "type": "http request",
-        "z": "fa3fdd8f.e55528",
-        "name": "",
-        "method": "POST",
-        "ret": "txt",
-        "paytoqs": "ignore",
-        "url": "https://eu-de.ml.cloud.ibm.com/ml/v4/deployments/63c53276-9a46-4fb8-807f-b810227b9527/predictions?version=2020-08-01",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "x": 1070,
-        "y": 480,
-        "wires": [
-            [
-                "26db8bf6.47e8cc",
-                "31157b1b.5906a4"
-            ]
-        ]
-    },
-    {
-        "id": "83a93d2e.6d625",
-        "type": "function",
-        "z": "fa3fdd8f.e55528",
-        "name": "",
-        "func": "msg.headers = {};\nmsg.headers['Authorization'] =  'Bearer ' + context.global.get('iamToken');\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 900,
-        "y": 380,
-        "wires": [
-            [
-                "8385faa3.179308"
-            ]
-        ]
-    },
-    {
-        "id": "b415f89f.507738",
-        "type": "debug",
-        "z": "fa3fdd8f.e55528",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 820,
-        "y": 480,
-        "wires": []
-    }
+  {
+    "id": "fa3fdd8f.e55528",
+    "type": "tab",
+    "label": "Scoring",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "444b07a3.bd97b",
+    "type": "http in",
+    "z": "fa3fdd8f.e55528",
+    "name": "",
+    "url": "/score_motion",
+    "method": "post",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 470,
+    "y": 400,
+    "wires": [["b415f89f.507738", "51f922e.1749bdc"]]
+  },
+  {
+    "id": "b415f89f.507738",
+    "type": "debug",
+    "z": "fa3fdd8f.e55528",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 690,
+    "y": 420,
+    "wires": []
+  },
+  {
+    "id": "51f922e.1749bdc",
+    "type": "function",
+    "z": "fa3fdd8f.e55528",
+    "name": "prepare data",
+    "func": "\n// Paste your IAM key or Watson Machine Learning service apikey here\n// Use this code as written to get an access token from IBM Cloud REST API\n\n\n//grant_type=urn:ibm:params:oauth:grant-type:apikey\n\n// IBM Payed User Environment (override)\n//api_key = \"xxxxxxx insert here xxxxxxx\";\n//api_key = \"jcHhUKY817u9O5jd9YW3WTUSAMMxP9kTRzD8Q_L_51Pg\"\napi_key=\"EgchpcFWotBXYam6JHPTvTDBOeXDELzBmA4o8s18J066\"\n\n// Paste your Machine Learing informations here to process the right model / region call\n// .. location is where the ML Service is deployed (eg us-south, eu-de, eu-gb)\n// .. deployment_id is the ID of the deployed function \nvar ml_deployment_id = 'xxxxxxx insert here xxxxxxx';\nml_deployment_id = \"d547129a-8573-4a3d-b850-2092f9b69181\"\n\n//var ml_location = \"us-south\";\n//var ml_api_version = \"2020-09-01\";\n//msg.ml_url = \"https://\" + ml_location + \".ml.cloud.ibm.com/ml/v4/deployments/\"+ ml_deployment_id +\"/predictions?version=\"+ml_api_version;\n\n// create and save the ml callable url\nmsg.ml_url = \"https://eu-de.ml.cloud.ibm.com/ml/v4/deployments/63c53276-9a46-4fb8-807f-b810227b9527/predictions?version=2020-08-01\"\n\n// set the right header for call \nmsg.headers = {\n    \"Content-Type\" : \"application/x-www-form-urlencoded\",\n    \"Accept\": \"application/json\"\n};\n\n// set the scoring payload \nmsg.scoring_payload = msg.payload\n    // { 'input_data': [{'values' : [msg.payload]}] }\n\n// request the temporary token\nmsg.payload = {\n    \"grant_type\" : \"urn:ibm:params:oauth:grant-type:apikey\",\n    \"apikey\" : api_key\n};\n\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 710,
+    "y": 320,
+    "wires": [["ee1178b.714eb88"]]
+  },
+  {
+    "id": "ee1178b.714eb88",
+    "type": "http request",
+    "z": "fa3fdd8f.e55528",
+    "name": "get token",
+    "method": "POST",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "https://iam.cloud.ibm.com/identity/token",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 880,
+    "y": 320,
+    "wires": [["27f9a4f9.bc2434", "d4f93fdb.149d78"]]
+  },
+  {
+    "id": "27f9a4f9.bc2434",
+    "type": "debug",
+    "z": "fa3fdd8f.e55528",
+    "name": "token response",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 1080,
+    "y": 240,
+    "wires": []
+  },
+  {
+    "id": "d4f93fdb.149d78",
+    "type": "function",
+    "z": "fa3fdd8f.e55528",
+    "name": "scoring payload",
+    "func": "// enhance the header with the given token\nmsg.headers = {\n    \"Accept\": \"application/json\",\n    \"Authorization\": 'Bearer ' + msg.payload.access_token,\n    \"Content-Type\": \"application/json;charset=UTF-8\"\n};\n\n// use the generated url for the call\nmsg.url = msg.ml_url;\n\n// set the payload to the scoring payload saved before\nmsg.payload = msg.scoring_payload;\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1100,
+    "y": 300,
+    "wires": [["5c09d463.b03f1c"]]
+  },
+  {
+    "id": "a4caa6d4.a6f048",
+    "type": "http response",
+    "z": "fa3fdd8f.e55528",
+    "name": "Score",
+    "statusCode": "",
+    "headers": {},
+    "x": 1370,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "e5fef573.e3617",
+    "type": "debug",
+    "z": "fa3fdd8f.e55528",
+    "name": "scoring result",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 1380,
+    "y": 380,
+    "wires": []
+  },
+  {
+    "id": "5c09d463.b03f1c",
+    "type": "http request",
+    "z": "fa3fdd8f.e55528",
+    "name": "do scoring",
+    "method": "POST",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 1150,
+    "y": 360,
+    "wires": [["a4caa6d4.a6f048", "e5fef573.e3617"]]
+  },
+  {
+    "id": "a63b710a.f47d5",
+    "type": "http in",
+    "z": "fa3fdd8f.e55528",
+    "name": "",
+    "url": "/train_motion",
+    "method": "post",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 470,
+    "y": 580,
+    "wires": [["54dfcdec.e652bc", "c2b31d4a.abc81"]]
+  },
+  {
+    "id": "54dfcdec.e652bc",
+    "type": "debug",
+    "z": "fa3fdd8f.e55528",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 670,
+    "y": 660,
+    "wires": []
+  },
+  {
+    "id": "c2b31d4a.abc81",
+    "type": "function",
+    "z": "fa3fdd8f.e55528",
+    "name": "prepare data",
+    "func": "\n// Paste your IAM key or Watson Machine Learning service apikey here\n// Use this code as written to get an access token from IBM Cloud REST API\n\n\n//grant_type=urn:ibm:params:oauth:grant-type:apikey\n\n// IBM Payed User Environment (override)\n//api_key = \"xxxxxxx insert here xxxxxxx\";\n//api_key = \"jcHhUKY817u9O5jd9YW3WTUSAMMxP9kTRzD8Q_L_51Pg\"\napi_key=\"EgchpcFWotBXYam6JHPTvTDBOeXDELzBmA4o8s18J066\"\n\n// Paste your Machine Learing informations here to process the right model / region call\n// .. location is where the ML Service is deployed (eg us-south, eu-de, eu-gb)\n// .. deployment_id is the ID of the deployed function \nvar ml_deployment_id = 'xxxxxxx insert here xxxxxxx';\nml_deployment_id = \"d547129a-8573-4a3d-b850-2092f9b69181\"\n\n//var ml_location = \"us-south\";\n//var ml_api_version = \"2020-09-01\";\n//msg.ml_url = \"https://\" + ml_location + \".ml.cloud.ibm.com/ml/v4/deployments/\"+ ml_deployment_id +\"/predictions?version=\"+ml_api_version;\n\n// create and save the ml callable url\nmsg.ml_url = \"https://eu-de.ml.cloud.ibm.com/ml/v4/deployments/63c53276-9a46-4fb8-807f-b810227b9527/predictions?version=2020-08-01\"\n\n// set the right header for call \nmsg.headers = {\n    \"Content-Type\" : \"application/x-www-form-urlencoded\",\n    \"Accept\": \"application/json\"\n};\n\n// set the scoring payload \nmsg.scoring_payload = msg.payload\n    // { 'input_data': [{'values' : [msg.payload]}] }\n\n// request the temporary token\nmsg.payload = {\n    \"grant_type\" : \"urn:ibm:params:oauth:grant-type:apikey\",\n    \"apikey\" : api_key\n};\n\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 710,
+    "y": 540,
+    "wires": [["dd2a9ac3.9b25a8"]]
+  },
+  {
+    "id": "dd2a9ac3.9b25a8",
+    "type": "http request",
+    "z": "fa3fdd8f.e55528",
+    "name": "get token",
+    "method": "POST",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "https://iam.cloud.ibm.com/identity/token",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 920,
+    "y": 540,
+    "wires": [["f9b7af10.2480a8", "3cee65b5.7a1b22"]]
+  },
+  {
+    "id": "f9b7af10.2480a8",
+    "type": "debug",
+    "z": "fa3fdd8f.e55528",
+    "name": "token response",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 1120,
+    "y": 480,
+    "wires": []
+  },
+  {
+    "id": "3cee65b5.7a1b22",
+    "type": "function",
+    "z": "fa3fdd8f.e55528",
+    "name": "training payload",
+    "func": "// enhance the header with the given token\nmsg.headers = {\n    \"Accept\": \"application/json\",\n    \"Authorization\": 'Bearer ' + msg.payload.access_token,\n    \"Content-Type\": \"application/json;charset=UTF-8\"\n};\n\n// use the generated url for the call\nmsg.url = msg.ml_url;\n\n// set the payload to the scoring payload saved before\nmsg.payload = msg.scoring_payload;\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1120,
+    "y": 600,
+    "wires": [[]]
+  }
 ]

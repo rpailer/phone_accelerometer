@@ -1,22 +1,10 @@
 export const TRIGGER_SCORING = "trigger_scoring";
-export const SET_ACCELERATION_EVENT = "set_accelleration_event";
-export const SET_ORIENTATION_EVENT = "set_orientation_event";
 export const ADD_DATA_OBJ = "add_data_obj";
 export const SET_DATA_OBJ = "set_data_obj";
 export const SET_SCORE_URL = "set_score_url";
 export const SET_PRED = "set_pred";
 export const SET_DELAY = "set_delay";
 
-export const setAccelerationEvent = (obj) => ({
-    type: SET_ACCELERATION_EVENT,
-    obj
-});
-
-export const setOrientationEvent = (obj) => ({
-    type: SET_ORIENTATION_EVENT,
-    obj
-});
-  
 export const triggerScoring = () => ({
     type: TRIGGER_SCORING,
 });

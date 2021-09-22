@@ -1,12 +1,10 @@
-import { Box, Button, Divider, FormLabel, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from "@material-ui/core";
+import { Box, Button, Divider, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import PauseCircleOutlineIcon from '@material-ui/icons/PauseCircleOutline';
+import axios from "axios";
 import DialpadIcon from '@material-ui/icons/Dialpad';
-import SendIcon from '@material-ui/icons/Send';
-import { useDispatch, useSelector } from "react-redux";
-import { addTrainDataObj, setTrainDataObj, setTRainDelay, setTrainUrl, triggerTrain } from "../redux/ducks/TrainReducer";
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -22,18 +20,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Train () {
     const classes = useStyles();
-    const dispatch = useDispatch();
-
     const [recording, setRecording] = React.useState(false);
-    const [motionset, setMotionset] = React.useState("");
+    const [orgId, setOrgId] = React.useState("ygbety");
+    const [devType, setDevType] = React.useState("Raspy");
+    const [devId, setDevId] = React.useState("raspi-sim");
+    const [eventType, setEventType] = React.useState("motion");
+    const [token, setToken] = React.useState("");
     const [key, setKey] = React.useState("");   
-
+    const [motionset, setMotionset] = React.useState("");
 
     const sendOrientation = process.env.REACT_APP_ORIENTATION === 'true' ? true : false;
-
-    const nodeRedUrl = useSelector((state) => state.train.trainUrl);
-    const dataObj = useSelector((state) => state.train.dataObj);
-    const delay = useSelector((state) => state.train.delay);
 
     const handleAcceleration = (event) => {
         console.log("Handle acceleration")
@@ -41,26 +37,21 @@ export default function Train () {
         let now = new Date();
         if(recording) {
             var data = {
-                device: "phone_1",
-                figure: key,
-                motionset: motionset,
-                date: now.toISOString(),
-                timestamp: now.getTime(),
-                acceleration: {
-                    x: event.acceleration.x,
-                    y: event.acceleration.y,
-                    z: event.acceleration.z
-                },
-            };
-            if (dataObj.dataArray.at(-1)) {
-                console.log("last " + dataObj.dataArray.at(-1).timestamp);
-                let timeDiff = now - dataObj.dataArray.at(-1).timestamp;
-                if (timeDiff > delay) {
-                    dispatch(addTrainDataObj(data));
+                d: {
+                    acceleration: {
+                        x: event.acceleration.x,
+                        y: event.acceleration.y,
+                        z: event.acceleration.z
+                    },
+                    date: now.toISOString(),
+                    timestamp: now.getTime(),
+                    device: devId,
+                    motionset: motionset,
+                    figure: key,
                 }
-            } else {
-                dispatch(addTrainDataObj(data));
-            }
+            };
+            console.log("sending acceleration data");
+            sendData(data);
         }
     }
 
@@ -71,56 +62,42 @@ export default function Train () {
         let now = new Date();
         if(recording) {
             var data = {
-                device: "phone_1",
-                figure: key,
-                motionset: motionset,
-                date: now.toISOString(),
-                timestamp: now.getTime(),
-                orientation: {
-                    alpha: event.alpha,
-                    beta: event.beta,
-                    gamma: event.gamma
-                },
-            };
-            console.log(dataObj.dataArray.at(-1))
-            if (dataObj.dataArray.at(-1)) {
-                console.log("last " + dataObj.dataArray.at(-1).timestamp);
-                let timeDiff = now - dataObj.dataArray.at(-1).timestamp;
-                if (timeDiff > delay) {
-                    dispatch(addTrainDataObj(data));
+                d: {
+                    orientation: {
+                        alpha: event.alpha,
+                        beta: event.beta,
+                        gamma: event.gamma
+                    },
+                    date: now.toISOString(),
+                    timestamp: now.getTime(),
+                    device: devId,
+                    motionset: motionset,
+                    figure: key,
                 }
-            } else {
-                dispatch(addTrainDataObj(data));
-            }
+            };
+            console.log("sending orientation data");
+            sendData(data);
         }
     }
 
-    const handleStart = () => {
-        console.log("Start");
-        let now = new Date();
-        setMotionset(now.toISOString());
-        setRecording(true);
-        dispatch(setTrainDataObj({
-            dataArray:[]
-        }))
-        console.log("recording:" + recording)
-    };
+    const sendData = (data) => {
+        var url = "https://" + orgId + ".messaging.internetofthings.ibmcloud.com/api/v0002/device/types/" + devType + "/devices/" + devId + "/events/" + eventType;
+        console.log("sending to: " + url);
+        console.log(data);
+        axios.request({
+            method: "POST",
+            url: url,
+            data: data,
+            headers: { "Content-Type": "application/json",
+                       "Accept": "application/json",
+                    },
+            auth: {
+                username: 'use-token-auth',
+                password: token
+                }
+        });
+    }
 
-    const handleStop = () => {
-        console.log("Stop");
-        setRecording(false);
-        console.log("recording:" + recording)
-    };
-
-    const handleNumber = (k) => {
-        console.log(k);
-        setKey(k);
-    };
-    
-    const handleSend = () => {
-        console.log("Send");
-        dispatch(triggerTrain());
-    };
     useEffect(() => {
         console.log("Use effect");
         if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
@@ -142,29 +119,75 @@ export default function Train () {
                 }
                     };
         // eslint-disable-next-line
-          }, [recording, dataObj]);
+          }, [recording]);
 
- 
+    const handleStart = () => {
+        console.log("Start");
+        let now = new Date();
+        setMotionset(now.toISOString());
+        setRecording(true);
+        console.log("recording:" + recording)
+    };
+
+    const handleStop = () => {
+        console.log("Stop");
+        setRecording(false);
+        console.log("recording:" + recording)
+    };
+
+    const handleNumber = (k) => {
+        console.log(k);
+        setKey(k);
+    };
+    
+
+
+
     return (
         <div>
             <Grid m={2} justifyContent="center" alignItems="center">
             <TextField
                 required
-                id="nrUrl"
-                label="Node Red URL"
-                value={nodeRedUrl}
+                id="org-id"
+                label="Organization Id"
+                value={orgId}
                 className={classes.textField}
-                onChange={(e) => { dispatch(setTrainUrl(e.target.value)) }}
+                onChange={(e) => { setOrgId(e.target.value); }}
             />
             <TextField
                 required
-                type="number"
-                id="delay"
-                label="Delay between data points"
-                value={delay}
+                id="dev-type"
+                label="Device Type"
+                value={devType}
                 className={classes.textField}
-                onChange={(e) => { dispatch(setTRainDelay(e.target.value)) }}
-            />            <Box p={2}><Divider/></Box>
+                onChange={(e) => { setDevType(e.target.value); }}
+            />
+            <TextField
+                required
+                id="dev-id"
+                label="Device ID"
+                value={devId}
+                className={classes.textField}
+                onChange={(e) => { setDevId(e.target.value); }}
+            />
+            <TextField
+                required
+                id="event-type"
+                label="Event Type"
+                value={eventType}
+                className={classes.textField}
+                onChange={(e) => { setEventType(e.target.value); }}
+            />
+            <TextField
+                required
+                id="token"
+                label="Token"
+                value={token}
+                className={classes.textField}
+                type="password"
+                onChange={(e) => { setToken(e.target.value); }}
+            />
+            <Box p={2}><Divider/></Box>
             <Grid item justifyContent="center">
             <Box mb={3}>
                 <InputLabel>Select figure</InputLabel>
@@ -255,37 +278,6 @@ export default function Train () {
                 </div>
             )}
             </Grid>
-            <div>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    startIcon={<SendIcon/>}
-                    onClick={handleSend}
-                >
-                    Send
-                </Button>
-                </div>
-            {dataObj && (
-                <Box mt={2}>
-                    <Grid container alignItems="center">
-                        <FormLabel>Number of events recorded: </FormLabel>
-                        <Box ml={1}><Typography>{dataObj.dataArray.length}</Typography></Box>
-                    </Grid>
-                    <Box mt={1}>
-                    <TextField
-                        multiline
-                        fullWidth
-                        label="Data Object"
-                        rows={10}
-                        variant="outlined"
-                        value={JSON.stringify(dataObj, null, 2) }
-                    >
-
-                    </TextField>
-                    </Box>
-                </Box>
-            )}
         </div>
     );
 }
