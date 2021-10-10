@@ -10,16 +10,6 @@ export const triggerScoring = (dataObj) => ({
     dataObj
 });
 
-// export const addDataObj = (obj) => ({
-//     type: ADD_DATA_OBJ,
-//     obj
-// });
-
-// export const setDataObj = (dataObj) => ({
-//     type:SET_DATA_OBJ,
-//     dataObj
-// });
-
 export const setScoreUrl = (url) => ({
     type: SET_SCORE_URL,
     url
@@ -47,25 +37,6 @@ const initialState = {
 
 const ScoreReducer = (state = initialState, action) => {
     switch (action.type) {
-        // case ADD_DATA_OBJ:
-        //     console.log("ScoreReducer.ADD_DATA_OBJ");
-        //     console.log(action.obj);
-        //     let newAddObState = {
-        //         ...state,
-        //         dataObj: {
-        //             ...state.dataObj,
-        //             dataArray: [...state.dataObj.dataArray, action.obj]
-        //         }
-        //     }
-        //     console.log(newAddObState);
-        //     return newAddObState;
-        // case SET_DATA_OBJ:
-        //     console.log("ScoreReducer.SET_DATA_OBJ");
-        //     console.log(action.dataObj);
-        //     return {
-        //         ...state,
-        //         dataObj: action.dataObj,
-        //     }
         case SET_PRED:
             console.log("ScoreReducer.SET_PRED");
             console.log(action.pred);

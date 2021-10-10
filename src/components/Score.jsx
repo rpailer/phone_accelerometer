@@ -30,20 +30,13 @@ export default function Score () {
 
     const nodeRedUrl = useSelector((state) => state.score.scoreUrl);
     const pred = useSelector((state) => state.score.pred);
-//    const dataObj = useSelector((state) => state.score.dataObj);
     const delay = useSelector((state) => state.score.delay);
 
     const [dataObj, setDataObj] = React.useState({dataArray: []});
 
-    // const dataObjRef = React.useRef(dataObj);
-    // const setDataObj = data => {
-    //     dataObjRef.current = data;
-    //     _setDataObj(data);
-    // };
 
     const handleAcceleration = (event) => {
         console.log("Handle acceleration, recording=" + recording);
-        //alert("data point");
         let now = new Date();
         if(recording) {
             var data = {
@@ -58,7 +51,6 @@ export default function Score () {
                     z: event.acceleration.z
                 },
             };
-            console.log("before");
 
             console.log("length: " + dataObj.dataArray.length);
             let len = dataObj.dataArray.length;
@@ -71,28 +63,11 @@ export default function Score () {
             } else {
                 setDataObj({ dataArray: [...dataObj.dataArray, data]});
             }
-
-
-
-
-            // console.log("length: " + dataObjRef.current.dataArray.length);
-            // let len = dataObjRef.current.dataArray.length;
-            // if (len > 0) {
-            //     console.log("last " + dataObjRef.current.dataArray[len - 1].timestamp);
-            //     let timeDiff = now - dataObjRef.current.dataArray[len - 1].timestamp;
-            //     if (timeDiff > delay) {
-            //         setDataObj({ dataArray: [...dataObjRef.current.dataArray, data]});
-            //     }
-            // } else {
-            //     setDataObj({ dataArray: [...dataObjRef.current.dataArray, data]});
-            // }
-            console.log("afer");
         }
     }
 
     const handleOrientation = (event) => {
         console.log("handle orientation, recording=" + recording);    
-        //alert("data point");
         let now = new Date();
         if(recording) {
             var data = {
@@ -107,10 +82,11 @@ export default function Score () {
                     gamma: event.gamma
                 },
             };
-            //console.log(dataObj.dataArray.at(-1))
-            if (dataObj.dataArray.at(-1)) {
-                console.log("last " + dataObj.dataArray.at(-1).timestamp);
-                let timeDiff = now - dataObj.dataArray.at(-1).timestamp;
+            console.log("length: " + dataObj.dataArray.length);
+            let len = dataObj.dataArray.length;
+            if (len > 0) {
+                console.log("last " + dataObj.dataArray[len - 1].timestamp);
+                let timeDiff = now - dataObj.dataArray[len - 1].timestamp;
                 if (timeDiff > delay) {
                     setDataObj({ dataArray: [...dataObj.dataArray, data]});
                 }
@@ -151,7 +127,6 @@ export default function Score () {
                 }
             });  
         }
-        if(recording) {
         window.addEventListener('devicemotion', handleAcceleration);
         if (sendOrientation) {
             window.addEventListener('deviceorientation', handleOrientation);
@@ -163,8 +138,7 @@ export default function Score () {
                 }
                     };
         // eslint-disable-next-line
-    }
-          }, [recording, dataObj]);
+    }, [recording, dataObj]);
 
     return (
         <div>

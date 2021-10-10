@@ -6,7 +6,7 @@ import PauseCircleOutlineIcon from '@material-ui/icons/PauseCircleOutline';
 import DialpadIcon from '@material-ui/icons/Dialpad';
 import SendIcon from '@material-ui/icons/Send';
 import { useDispatch, useSelector } from "react-redux";
-import { addTrainDataObj, setTrainDataObj, setTRainDelay, setTrainUrl, triggerTrain } from "../redux/ducks/TrainReducer";
+import { setTRainDelay, setTrainUrl, triggerTrain } from "../redux/ducks/TrainReducer";
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -32,8 +32,8 @@ export default function Train () {
     const sendOrientation = process.env.REACT_APP_ORIENTATION === 'true' ? true : false;
 
     const nodeRedUrl = useSelector((state) => state.train.trainUrl);
-    const dataObj = useSelector((state) => state.train.dataObj);
     const delay = useSelector((state) => state.train.delay);
+    const [dataObj, setDataObj] = React.useState({dataArray: []});
 
     const handleAcceleration = (event) => {
         console.log("Handle acceleration")
@@ -52,14 +52,16 @@ export default function Train () {
                     z: event.acceleration.z
                 },
             };
-            if (dataObj.dataArray.at(-1)) {
-                console.log("last " + dataObj.dataArray.at(-1).timestamp);
-                let timeDiff = now - dataObj.dataArray.at(-1).timestamp;
+            console.log("length: " + dataObj.dataArray.length);
+            let len = dataObj.dataArray.length;
+            if (len > 0) {
+                console.log("last " + dataObj.dataArray[len - 1].timestamp);
+                let timeDiff = now - dataObj.dataArray[len - 1].timestamp;
                 if (timeDiff > delay) {
-                    dispatch(addTrainDataObj(data));
+                    setDataObj({ dataArray: [...dataObj.dataArray, data]});
                 }
             } else {
-                dispatch(addTrainDataObj(data));
+                setDataObj({ dataArray: [...dataObj.dataArray, data]});
             }
         }
     }
@@ -82,15 +84,16 @@ export default function Train () {
                     gamma: event.gamma
                 },
             };
-            console.log(dataObj.dataArray.at(-1))
-            if (dataObj.dataArray.at(-1)) {
-                console.log("last " + dataObj.dataArray.at(-1).timestamp);
-                let timeDiff = now - dataObj.dataArray.at(-1).timestamp;
+            console.log("length: " + dataObj.dataArray.length);
+            let len = dataObj.dataArray.length;
+            if (len > 0) {
+                console.log("last " + dataObj.dataArray[len - 1].timestamp);
+                let timeDiff = now - dataObj.dataArray[len - 1].timestamp;
                 if (timeDiff > delay) {
-                    dispatch(addTrainDataObj(data));
+                    setDataObj({ dataArray: [...dataObj.dataArray, data]});
                 }
             } else {
-                dispatch(addTrainDataObj(data));
+                setDataObj({ dataArray: [...dataObj.dataArray, data]});
             }
         }
     }
@@ -100,9 +103,7 @@ export default function Train () {
         let now = new Date();
         setMotionset(now.toISOString());
         setRecording(true);
-        dispatch(setTrainDataObj({
-            dataArray:[]
-        }))
+        setDataObj({dataArray: []});
         console.log("recording:" + recording)
     };
 
