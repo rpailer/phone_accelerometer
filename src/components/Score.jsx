@@ -63,8 +63,13 @@ export default function Score () {
             let len = dataObjRef.current.dataArray.length;
             if (len > 0) {
                 console.log("last " + dataObjRef.current.dataArray[len - 1].timestamp);
+                let timeDiff = now - dataObjRef.current.dataArray[len - 1].timestamp;
+                if (timeDiff > delay) {
+                    setDataObj({ dataArray: [...dataObjRef.current.dataArray, data]});
+                }
+            } else {
+                setDataObj({ dataArray: [...dataObjRef.current.dataArray, data]});
             }
-            setDataObj({ dataArray: [...dataObjRef.current.dataArray, data]});
             // if (dataObjRef.current.dataArray.at(-1)) {
             //     console.log("last " + dataObjRef.current.dataArray.at(-1).timestamp);
             //     let timeDiff = now - dataObjRef.current.dataArray.at(-1).timestamp;
