@@ -33,13 +33,13 @@ export default function Score () {
 //    const dataObj = useSelector((state) => state.score.dataObj);
     const delay = useSelector((state) => state.score.delay);
 
-    const [dataObj, _setDataObj] = React.useState({dataArray: []});
+    const [dataObj, setDataObj] = React.useState({dataArray: []});
 
-    const dataObjRef = React.useRef(dataObj);
-    const setDataObj = data => {
-        dataObjRef.current = data;
-        _setDataObj(data);
-    };
+    // const dataObjRef = React.useRef(dataObj);
+    // const setDataObj = data => {
+    //     dataObjRef.current = data;
+    //     _setDataObj(data);
+    // };
 
     const handleAcceleration = (event) => {
         console.log("Handle acceleration, recording=" + recording);
@@ -59,28 +59,31 @@ export default function Score () {
                 },
             };
             console.log("before");
-            console.log("length: " + dataObjRef.current.dataArray.length);
-            let len = dataObjRef.current.dataArray.length;
+
+            console.log("length: " + dataObj.dataArray.length);
+            let len = dataObj.dataArray.length;
             if (len > 0) {
-                console.log("last " + dataObjRef.current.dataArray[len - 1].timestamp);
-                let timeDiff = now - dataObjRef.current.dataArray[len - 1].timestamp;
+                console.log("last " + dataObj.dataArray[len - 1].timestamp);
+                let timeDiff = now - dataObj.dataArray[len - 1].timestamp;
                 if (timeDiff > delay) {
-                    setDataObj({ dataArray: [...dataObjRef.current.dataArray, data]});
+                    setDataObj({ dataArray: [...dataObj.dataArray, data]});
                 }
             } else {
-                setDataObj({ dataArray: [...dataObjRef.current.dataArray, data]});
+                setDataObj({ dataArray: [...dataObj.dataArray, data]});
             }
-            // if (dataObjRef.current.dataArray.at(-1)) {
-            //     console.log("last " + dataObjRef.current.dataArray.at(-1).timestamp);
-            //     let timeDiff = now - dataObjRef.current.dataArray.at(-1).timestamp;
+
+
+
+
+            // console.log("length: " + dataObjRef.current.dataArray.length);
+            // let len = dataObjRef.current.dataArray.length;
+            // if (len > 0) {
+            //     console.log("last " + dataObjRef.current.dataArray[len - 1].timestamp);
+            //     let timeDiff = now - dataObjRef.current.dataArray[len - 1].timestamp;
             //     if (timeDiff > delay) {
-            //         console.log("set additional accel data " + data.date);
             //         setDataObj({ dataArray: [...dataObjRef.current.dataArray, data]});
-            //     } else {
-            //         console.log("ignore");
-            //     }  
+            //     }
             // } else {
-            //     console.log("set new accel data " + data.date);
             //     setDataObj({ dataArray: [...dataObjRef.current.dataArray, data]});
             // }
             console.log("afer");
