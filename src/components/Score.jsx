@@ -37,6 +37,7 @@ export default function Score () {
 
     const handleAcceleration = (event) => {
         console.log("Handle acceleration")
+        alert("data point");
         let now = new Date();
         if(recording) {
             var data = {
@@ -51,24 +52,21 @@ export default function Score () {
                     z: event.acceleration.z
                 },
             };
-            let newDataObj = {
-                ...dataObj,
-                dataArray: [...dataObj.dataArray, data]
-            }
             if (dataObj.dataArray.at(-1)) {
                 console.log("last " + dataObj.dataArray.at(-1).timestamp);
                 let timeDiff = now - dataObj.dataArray.at(-1).timestamp;
                 if (timeDiff > delay) {
-                    setDataObj(newDataObj);
+                    setDataObj({ dataArray: [...dataObj.dataArray, data]});
                 }
             } else {
-                setDataObj(newDataObj);
+                setDataObj({ dataArray: [...dataObj.dataArray, data]});
             }
         }
     }
 
     const handleOrientation = (event) => {
         console.log("handle orientation");    
+        alert("data point");
         let now = new Date();
         if(recording) {
             var data = {
@@ -84,18 +82,14 @@ export default function Score () {
                 },
             };
             console.log(dataObj.dataArray.at(-1))
-            let newDataObj = {
-                ...dataObj,
-                dataArray: [...dataObj.dataArray, data]
-            }
             if (dataObj.dataArray.at(-1)) {
                 console.log("last " + dataObj.dataArray.at(-1).timestamp);
                 let timeDiff = now - dataObj.dataArray.at(-1).timestamp;
                 if (timeDiff > delay) {
-                    setDataObj(newDataObj);
+                    setDataObj({ dataArray: [...dataObj.dataArray, data]});
                 }
             } else {
-                setDataObj(newDataObj);
+                setDataObj({ dataArray: [...dataObj.dataArray, data]});
             }
         }
     }
