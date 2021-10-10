@@ -58,13 +58,13 @@ export default function Score () {
                 let timeDiff = now - dataObj.dataArray.at(-1).timestamp;
                 if (timeDiff > delay) {
                     console.log("set additional accel data " + data.date);
-                    setDataObj({ dataArray: [...dataObj.dataArray, data]});
+                    //setDataObj({ dataArray: [...dataObj.dataArray, data]});
                 } else {
                     console.log("ignore");
                 }  
             } else {
                 console.log("set new accel data " + data.date);
-                setDataObj({ dataArray: [...dataObj.dataArray, data]});
+                //setDataObj({ dataArray: [...dataObj.dataArray, data]});
             }
             console.log("afer");
         }
