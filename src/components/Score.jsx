@@ -70,7 +70,7 @@ export default function Score () {
             //     }  
             // } else {
             //     console.log("set new accel data " + data.date);
-            setDataObj({ dataArray: [...dataObjRef.dataArray, data]});
+            setDataObj({ dataArray: [...dataObjRef.current.dataArray, data]});
             // }
             console.log("afer");
         }
