@@ -53,19 +53,19 @@ export default function Score () {
                 },
             };
             console.log("before");
-            if (dataObj.dataArray.at(-1)) {
-                console.log("last " + dataObj.dataArray.at(-1).timestamp);
-                let timeDiff = now - dataObj.dataArray.at(-1).timestamp;
-                if (timeDiff > delay) {
-                    console.log("set additional accel data " + data.date);
-                    //setDataObj({ dataArray: [...dataObj.dataArray, data]});
-                } else {
-                    console.log("ignore");
-                }  
-            } else {
-                console.log("set new accel data " + data.date);
-                //setDataObj({ dataArray: [...dataObj.dataArray, data]});
-            }
+            // if (dataObj.dataArray.at(-1)) {
+            //     console.log("last " + dataObj.dataArray.at(-1).timestamp);
+            //     let timeDiff = now - dataObj.dataArray.at(-1).timestamp;
+            //     if (timeDiff > delay) {
+            //         console.log("set additional accel data " + data.date);
+            //         //setDataObj({ dataArray: [...dataObj.dataArray, data]});
+            //     } else {
+            //         console.log("ignore");
+            //     }  
+            // } else {
+            //     console.log("set new accel data " + data.date);
+            //     //setDataObj({ dataArray: [...dataObj.dataArray, data]});
+            // }
             console.log("afer");
         }
     }
