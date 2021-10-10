@@ -33,7 +33,13 @@ export default function Score () {
 //    const dataObj = useSelector((state) => state.score.dataObj);
     const delay = useSelector((state) => state.score.delay);
 
-    const [dataObj, setDataObj] = React.useState({dataArray: []});
+    const [dataObj, _setDataObj] = React.useState({dataArray: []});
+
+    const dataObjRef = React.useRef(dataObj);
+    const setDataObj = data => {
+        dataObjRef.current = data;
+        _setDataObj(data);
+    };
 
     const handleAcceleration = (event) => {
         console.log("Handle acceleration, recording=" + recording);
@@ -64,7 +70,7 @@ export default function Score () {
             //     }  
             // } else {
             //     console.log("set new accel data " + data.date);
-            setDataObj({ dataArray: [...dataObj.dataArray, data]});
+            setDataObj({ dataArray: [...dataObjRef.dataArray, data]});
             // }
             console.log("afer");
         }
