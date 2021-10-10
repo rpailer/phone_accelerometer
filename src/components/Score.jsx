@@ -59,7 +59,11 @@ export default function Score () {
                 },
             };
             console.log("before");
-            console.log("last " + dataObjRef.current.dataArray.at(-1).timestamp);
+            console.log("length: " + dataObjRef.current.dataArray.length);
+            let len = dataObjRef.current.dataArray.length;
+            if (len > 0) {
+                console.log("last " + dataObjRef.current.dataArray[len - 1].timestamp);
+            }
             setDataObj({ dataArray: [...dataObjRef.current.dataArray, data]});
             // if (dataObjRef.current.dataArray.at(-1)) {
             //     console.log("last " + dataObjRef.current.dataArray.at(-1).timestamp);
