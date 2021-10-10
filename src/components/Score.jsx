@@ -37,7 +37,7 @@ export default function Score () {
 
     const handleAcceleration = (event) => {
         console.log("Handle acceleration")
-        alert("data point");
+        //alert("data point");
         let now = new Date();
         if(recording) {
             var data = {
@@ -66,7 +66,7 @@ export default function Score () {
 
     const handleOrientation = (event) => {
         console.log("handle orientation");    
-        alert("data point");
+        //alert("data point");
         let now = new Date();
         if(recording) {
             var data = {
@@ -125,6 +125,7 @@ export default function Score () {
                 }
             });  
         }
+        if(recording) {
         window.addEventListener('devicemotion', handleAcceleration);
         if (sendOrientation) {
             window.addEventListener('deviceorientation', handleOrientation);
@@ -136,7 +137,8 @@ export default function Score () {
                 }
                     };
         // eslint-disable-next-line
-          }, [recording, dataObj]);
+    }
+          }, [dataObj]);
 
     return (
         <div>
