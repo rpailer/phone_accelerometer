@@ -56,9 +56,11 @@ export default function Score () {
                 console.log("last " + dataObj.dataArray.at(-1).timestamp);
                 let timeDiff = now - dataObj.dataArray.at(-1).timestamp;
                 if (timeDiff > delay) {
+                    console.log("set additional accel data " + data.date);
                     setDataObj({ dataArray: [...dataObj.dataArray, data]});
                 }
             } else {
+                console.log("set new accel data " + data.date);
                 setDataObj({ dataArray: [...dataObj.dataArray, data]});
             }
         }
@@ -81,7 +83,7 @@ export default function Score () {
                     gamma: event.gamma
                 },
             };
-            console.log(dataObj.dataArray.at(-1))
+            //console.log(dataObj.dataArray.at(-1))
             if (dataObj.dataArray.at(-1)) {
                 console.log("last " + dataObj.dataArray.at(-1).timestamp);
                 let timeDiff = now - dataObj.dataArray.at(-1).timestamp;
