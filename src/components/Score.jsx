@@ -138,7 +138,7 @@ export default function Score () {
                     };
         // eslint-disable-next-line
     }
-          }, [dataObj]);
+          }, [recording, dataObj]);
 
     return (
         <div>
