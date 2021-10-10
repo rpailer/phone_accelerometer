@@ -5,7 +5,7 @@ import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import PauseCircleOutlineIcon from '@material-ui/icons/PauseCircleOutline';
 import SendIcon from '@material-ui/icons/Send';
 import { useDispatch, useSelector } from "react-redux";
-import { addDataObj, setDataObj, setDelay, setPred, setScoreUrl, triggerScoring } from "../redux/ducks/ScoreReducer";
+import { setDelay, setPred, setScoreUrl, triggerScoring } from "../redux/ducks/ScoreReducer";
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -30,21 +30,13 @@ export default function Score () {
 
     const nodeRedUrl = useSelector((state) => state.score.scoreUrl);
     const pred = useSelector((state) => state.score.pred);
-    const dataObj = useSelector((state) => state.score.dataObj);
+//    const dataObj = useSelector((state) => state.score.dataObj);
     const delay = useSelector((state) => state.score.delay);
+
+    const [dataObj, setDataObj] = React.useState({dataArray: []});
 
     const handleAcceleration = (event) => {
         console.log("Handle acceleration")
-
-        if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
-            DeviceMotionEvent.requestPermission().then(response => {
-                if (response === 'granted') {
-                    console.log("accelerometer permission granted");
-                    // Do stuff here
-                }
-            });  
-        }
-
         let now = new Date();
         if(recording) {
             var data = {
@@ -59,32 +51,24 @@ export default function Score () {
                     z: event.acceleration.z
                 },
             };
+            let newDataObj = {
+                ...dataObj,
+                dataArray: [...dataObj.dataArray, data]
+            }
             if (dataObj.dataArray.at(-1)) {
                 console.log("last " + dataObj.dataArray.at(-1).timestamp);
                 let timeDiff = now - dataObj.dataArray.at(-1).timestamp;
                 if (timeDiff > delay) {
-                    dispatch(addDataObj(data));
+                    setDataObj(newDataObj);
                 }
             } else {
-                dispatch(addDataObj(data));
+                setDataObj(newDataObj);
             }
         }
     }
 
     const handleOrientation = (event) => {
-        console.log("handle orientation");
-
-        if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
-            DeviceMotionEvent.requestPermission().then(response => {
-                if (response === 'granted') {
-                    console.log("accelerometer permission granted");
-                    // Do stuff here
-                }
-            });  
-        }
-
-    
-    
+        console.log("handle orientation");    
         let now = new Date();
         if(recording) {
             var data = {
@@ -100,14 +84,18 @@ export default function Score () {
                 },
             };
             console.log(dataObj.dataArray.at(-1))
+            let newDataObj = {
+                ...dataObj,
+                dataArray: [...dataObj.dataArray, data]
+            }
             if (dataObj.dataArray.at(-1)) {
                 console.log("last " + dataObj.dataArray.at(-1).timestamp);
                 let timeDiff = now - dataObj.dataArray.at(-1).timestamp;
                 if (timeDiff > delay) {
-                    dispatch(addDataObj(data));
+                    setDataObj(newDataObj);
                 }
             } else {
-                dispatch(addDataObj(data));
+                setDataObj(newDataObj);
             }
         }
     }
@@ -117,9 +105,7 @@ export default function Score () {
         let now = new Date();
         setMotionset(now.toISOString());
         setRecording(true);
-        dispatch(setDataObj({
-            dataArray:[]
-        }))
+        setDataObj({dataArray: []});
         dispatch(setPred(null));
         console.log("recording started")
     };
@@ -132,7 +118,7 @@ export default function Score () {
 
     const handleSend = () => {
         console.log("Send");
-        dispatch(triggerScoring());
+        dispatch(triggerScoring(dataObj));
     };
 
     useEffect(() => {

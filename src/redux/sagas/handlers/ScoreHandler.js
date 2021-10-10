@@ -10,7 +10,7 @@ export function* handleScoreRequest(action) {
 
     const state = yield select();
     //console.log(state);
-    const response = yield call(scoreRequest, state.score.dataObj, state.score.scoreUrl);
+    const response = yield call(scoreRequest, action.dataObj, state.score.scoreUrl);
     console.log("handleScoreRequest: ");
     console.log(response);
     yield put(setPred(response));
