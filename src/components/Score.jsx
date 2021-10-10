@@ -35,6 +35,16 @@ export default function Score () {
 
     const handleAcceleration = (event) => {
         console.log("Handle acceleration")
+
+        if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
+            DeviceMotionEvent.requestPermission().then(response => {
+                if (response === 'granted') {
+                    console.log("accelerometer permission granted");
+                    // Do stuff here
+                }
+            });  
+        }
+
         let now = new Date();
         if(recording) {
             var data = {
@@ -63,6 +73,18 @@ export default function Score () {
 
     const handleOrientation = (event) => {
         console.log("handle orientation");
+
+        if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
+            DeviceMotionEvent.requestPermission().then(response => {
+                if (response === 'granted') {
+                    console.log("accelerometer permission granted");
+                    // Do stuff here
+                }
+            });  
+        }
+
+    
+    
         let now = new Date();
         if(recording) {
             var data = {
