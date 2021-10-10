@@ -36,7 +36,7 @@ export default function Score () {
     const [dataObj, setDataObj] = React.useState({dataArray: []});
 
     const handleAcceleration = (event) => {
-        console.log("Handle acceleration")
+        console.log("Handle acceleration, recording=" + recording);
         //alert("data point");
         let now = new Date();
         if(recording) {
@@ -65,7 +65,7 @@ export default function Score () {
     }
 
     const handleOrientation = (event) => {
-        console.log("handle orientation");    
+        console.log("handle orientation, recording=" + recording);    
         //alert("data point");
         let now = new Date();
         if(recording) {
@@ -116,7 +116,7 @@ export default function Score () {
     };
 
     useEffect(() => {
-        console.log("Use effect");  
+        console.log("Use effect, recording = " + recording);  
         if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
             DeviceMotionEvent.requestPermission().then(response => {
                 if (response === 'granted') {
