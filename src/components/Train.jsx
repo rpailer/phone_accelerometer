@@ -26,12 +26,18 @@ export default function Train () {
 
     const [recording, setRecording] = React.useState(false);
     const [motionset, setMotionset] = React.useState("");
-    const [key, setKey] = React.useState("");   
+    const [key, setKey] = React.useState("");
+    
+    const [orgId, setOrgId] = React.useState("ygbety");
+    const [devType, setDevType] = React.useState("Raspy");
+    const [devId, setDevId] = React.useState("raspi-sim");
+    const [eventType, setEventType] = React.useState("motion");
+    const [token, setToken] = React.useState("tjbotsim");
 
 
     const sendOrientation = process.env.REACT_APP_ORIENTATION === 'true' ? true : false;
 
-    const nodeRedUrl = useSelector((state) => state.train.trainUrl);
+    const trainUrl = useSelector((state) => state.train.trainUrl);
     const delay = useSelector((state) => state.train.delay);
     const [dataObj, setDataObj] = React.useState({dataArray: []});
 
@@ -120,8 +126,16 @@ export default function Train () {
     
     const handleSend = () => {
         console.log("Send");
-        dispatch(triggerTrain());
+        dispatch(triggerTrain(dataObj, trainUrl, token));
     };
+
+    const setUrl = () => {
+        console.log("setUrl");
+        let url =  "https://" + orgId + ".messaging.internetofthings.ibmcloud.com/api/v0002/device/types/" + devType + "/devices/" + devId + "/events/" + eventType;
+        console.log(url);
+        dispatch(setTrainUrl(url));
+    }
+
     useEffect(() => {
         console.log("Use effect");
         if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
@@ -151,9 +165,51 @@ export default function Train () {
             <Grid m={2} justifyContent="center" alignItems="center">
             <TextField
                 required
+                id="org-id"
+                label="Organization Id"
+                value={orgId}
+                className={classes.textField}
+                onChange={(e) => { setOrgId(e.target.value); setUrl();}}
+            />
+            <TextField
+                required
+                id="dev-type"
+                label="Device Type"
+                value={devType}
+                className={classes.textField}
+                onChange={(e) => { setDevType(e.target.value); }}
+            />
+            <TextField
+                required
+                id="dev-id"
+                label="Device ID"
+                value={devId}
+                className={classes.textField}
+                onChange={(e) => { setDevId(e.target.value); }}
+            />
+            <TextField
+                required
+                id="event-type"
+                label="Event Type"
+                value={eventType}
+                className={classes.textField}
+                onChange={(e) => { setEventType(e.target.value); }}
+            />
+            <TextField
+                required
+                id="token"
+                label="Token"
+                value={token}
+                className={classes.textField}
+                type="password"
+                onChange={(e) => { setToken(e.target.value); }}
+            />
+            <Box p={2}><Divider/></Box>
+             <TextField
+                required
                 id="nrUrl"
                 label="Node Red URL"
-                value={nodeRedUrl}
+                value={trainUrl}
                 className={classes.textField}
                 onChange={(e) => { dispatch(setTrainUrl(e.target.value)) }}
             />
@@ -165,7 +221,8 @@ export default function Train () {
                 value={delay}
                 className={classes.textField}
                 onChange={(e) => { dispatch(setTRainDelay(e.target.value)) }}
-            />            <Box p={2}><Divider/></Box>
+            />
+            <Box p={2}><Divider/></Box>
             <Grid item justifyContent="center">
             <Box mb={3}>
                 <InputLabel>Select figure</InputLabel>

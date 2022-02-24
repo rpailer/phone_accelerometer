@@ -2,8 +2,11 @@ export const TRIGGER_TRAIN = "trigger_train";
 export const SET_TRAIN_URL = "set_train_url";
 export const SET_TRAIN_DELAY = "set_train_delay";
 
-export const triggerTrain = () => ({
+export const triggerTrain = (dataObj, url, token) => ({
     type: TRIGGER_TRAIN,
+    dataObj,
+    url,
+    token
 });
 
 export const setTrainUrl = (url) => ({
@@ -17,7 +20,7 @@ export const setTRainDelay = (delay) => ({
 })
 
 const initialState = {
-    trainUrl: "https://node-red-fhbgld-2021-05-14.eu-de.mybluemix.net/train_motion",
+    trainUrl: "https://ygbety.messaging.internetofthings.ibmcloud.com/api/v0002/device/types/Raspy/devices/raspi-sim/events/motion",
     dataObj: {
         dataArray:[],
     },
