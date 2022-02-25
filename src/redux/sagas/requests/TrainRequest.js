@@ -4,7 +4,7 @@ import axios from "axios";
 export function trainRequest(dataObj, url, token) {
 
   console.log("trainRequest: " + url);
-  console.log("token: " + token);
+  //console.log("token: " + token);
   console.log(dataObj);
 
 //   var input = {

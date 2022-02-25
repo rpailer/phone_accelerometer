@@ -15,6 +15,35 @@ Redux state management
 `npm install redux-saga` 
 see also: https://github.com/erikras/ducks-modular-redux
 
+## Docker build Dockerfile taken from: https://nextjs.org/docs/deployment
+
+Build image:
+`docker build . -t sensor-app`
+
+Remove previous image:
+`docker rm sensor-app`
+
+Run image:
+`docker run -p 3000:8080 --name sensor-app sensor-app`
+
+Publish image ti IBM Cloud Registry:
+`docker tag sensor-app:latest de.icr.io/fh-bgld/sensor-app:latest` 
+`docker push de.icr.io/fh-bgld/sensor-app:latest`
+
+Deploy image in IBM Kubernetes Service:
+`kubectl config set-context --current --namespace=sensor-app`
+`kubectl delete deployment sensor-app-deployment`
+`kubectl apply -f ./kubernetes/2.1_sensor_deployment.yml `
+
+Restart existing deployment (after image push):
+`kubectl rollout restart deployment sensor-app-deployment`
+
+## Cloud Foundry
+`npm run build` in root folder -> creates ./build folder
+`cd build`  
+`ic cf push -f ../manifest.yml`
+
+
 # Node Red Scoring Flow
 In order to send data from a browser to a Node Red http input node, Node Red has to be configured to reply to CORS requests from the browser:
 
@@ -35,23 +64,7 @@ In order to send data from a browser to a Node Red http input node, Node Red has
 
 # IBM Cloud Toolchain Deployment
 
-kubernetes deploayment. https://cloud.ibm.com/devops/setup/deploy?repository=https%3A%2F%2Feu-de.git.cloud.ibm.com%2Fopen-toolchain%2Fsecure-kube-toolchain&topic=ContinuousDelivery-getting-started&env_id=ibm%3Ayp%3Aeu-de&source_provider=githubconsolidated
-
-1) Create a new empty toolchain
-2) Add the GitHub tool, configure with github credentials and project URL
-3) Add a Delivery Pipeline tool
-    - add a build stage, builder type npm  
-    add at the end of the build script add:  
-    `npm install`  
-    `npm run build`  
-    - add a deploy stage, deployer type Cloud Foundry  
-    **NOTE:** change the `-name: XXX-iot` in the `manifest.yml` file to your IOT organization name -> this will be the first part of the application URL!!!
-    replace the deploy script with:  
-    `#!/bin/bash`  
-    `cp -v Staticfile build &&`  
-    `cp -v manifest.yml build &&`  
-    `cd build &&`  
-    `cf push -f manifest.yml`  
+TBD 
 
 
 

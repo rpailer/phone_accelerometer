@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sensor-app-deployment
+  labels:
+    app: sensor-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sensor-app
+  template:
+    metadata:
+      labels:
+        app: sensor-app
+    spec:
+      containers:
+      - name: sensor-ngnx
+        image: de.icr.io/fh-bgld/sensor-app:latest
+        ports:
+        - containerPort: 8080
+          name: sensor

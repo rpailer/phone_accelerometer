@@ -35,14 +35,15 @@ export default function Train () {
     const [token, setToken] = React.useState("tjbotsim");
 
 
-    const sendOrientation = process.env.REACT_APP_ORIENTATION === 'true' ? true : false;
-
+//    const sendOrientation = process.env.REACT_APP_ORIENTATION === 'true' ? true : false;
+    const sendOrientation = false;
     const trainUrl = useSelector((state) => state.train.trainUrl);
     const delay = useSelector((state) => state.train.delay);
     const [dataObj, setDataObj] = React.useState({dataArray: []});
 
     const handleAcceleration = (event) => {
         console.log("Handle acceleration")
+        //alert("accel");
 //        console.log(event);
         let now = new Date();
         if(recording) {
@@ -59,6 +60,7 @@ export default function Train () {
                 },
             };
             console.log("length: " + dataObj.dataArray.length);
+ //           setDataObj({ dataArray: [...dataObj.dataArray, data]});
             let len = dataObj.dataArray.length;
             if (len > 0) {
                 console.log("last " + dataObj.dataArray[len - 1].timestamp);
@@ -106,7 +108,7 @@ export default function Train () {
 
     const handleStart = () => {
         console.log("Start");
-        let now = new Date();
+       let now = new Date();
         setMotionset(now.toISOString());
         setRecording(true);
         setDataObj({dataArray: []});
@@ -137,7 +139,7 @@ export default function Train () {
     }
 
     useEffect(() => {
-        console.log("Use effect");
+        //alert("use effect");
         if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
             DeviceMotionEvent.requestPermission().then(response => {
                 if (response === 'granted') {
@@ -208,7 +210,7 @@ export default function Train () {
              <TextField
                 required
                 id="nrUrl"
-                label="Node Red URL"
+                label="IOT URL"
                 value={trainUrl}
                 className={classes.textField}
                 onChange={(e) => { dispatch(setTrainUrl(e.target.value)) }}

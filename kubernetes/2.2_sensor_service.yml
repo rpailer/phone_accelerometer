@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sensor-app
+  name: sensor-svc
+  namespace: sensor-app
+spec:
+  type: NodePort
+  ports:
+  - name: sensor-svc
+    port: 8080
+    targetPort: 8080
+    nodePort: 31000
+  selector:
+    app: sensor-app
+  
